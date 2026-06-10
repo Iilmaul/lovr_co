@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOVR_co Official</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f1115;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* Pembatas Ukuran Layar ala Mobile/Katalog */
+        .wrapper {
+            width: 100%;
+            max-width: 550px;
+            background-color: #161920;
+            min-height: 100vh;
+            border-left: 1px solid #242936;
+            border-right: 1px solid #242936;
+            position: relative;
+            padding-bottom: 80px;
+        }
+
+        /* HEADER BANNER */
+        .banner {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* PROFIL & LOGO */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            margin-top: -45px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #161920;
+            background-color: #2e374a;
+        }
+
+        .profile-text {
+            margin-left: 15px;
+            margin-top: 40px;
+        }
+
+        .profile-text h1 {
+            font-size: 20px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .profile-text p {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        /* FILTER KATEGORI */
+        .category-container {
+            display: flex;
+            gap: 10px;
+            padding: 0 20px;
+            margin-bottom: 25px;
+        }
+
+        .cat-btn {
+            flex: 1;
+            padding: 12px;
+            background-color: #1e2533;
+            border: 1px solid #2e374a;
+            color: #cbd5e1;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .cat-btn:hover, .cat-btn.active {
+            background-color: #ffffff;
+            color: #0f1115;
+            border-color: #ffffff;
+        }
+
+        /* GRID PRODUK KATALOG */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            padding: 0 20px;
+        }
+
+        .product-card {
+            background-color: #1e2533;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #2e374a;
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #2e374a;
+        }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-price {
+            font-size: 13px;
+            color: #3b82f6;
+            font-weight: 700;
+        }
+
+        /* MODAL RAHASIA PANEL ADMIN */
+        .admin-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+            z-index: 99;
+        }
+
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1e2533;
+            border: 2px solid #3b82f6;
+            padding: 25px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            z-index: 100;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+        }
+
+        .admin-panel h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            background-color: #0f1115;
+            border: 1px solid #2e374a;
+            color: white;
+            border-radius: 6px;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-post {
+            background-color: #10b981;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            flex: 1;
+            font-weight: bold;
+        }
+
+        .btn-close {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <!-- Banner Atas -->
+        <div class="banner"></div>
+
+        <!-- Profil Info -->
+        <div class="profile-section">
+            <!-- Sudah diarahkan ke file logo milikmu -->
+            <img src="foto-ilham.jpg" alt="LOVR_co" class="logo-img">
+            <div class="profile-text">
+                <h1>LOVR_co Official</h1>
+                <p>LINK UNTUK KAUM SKENA & KALCER</p>
+            </div>
+        </div>
+
+        <!-- Filter Menu -->
+        <div class="category-container">
+            <button class="cat-btn active" onclick="filterCategory('semua')">SEMUA</button>
+            <button class="cat-btn" onclick="filterCategory('sepatu')">SEPATU</button>
+            <button class="cat-btn" onclick="filterCategory('kaos')">KAOS</button>
+        </div>
+
+        <!-- Wadah Output Postingan Produk -->
+        <div class="products-grid" id="productContainer">
+            <!-- Produk akan muncul di sini secara otomatis -->
+        </div>
+    </div>
+
+    <!-- Tombol Masuk Panel Admin Jarak Jauh -->
+    <button class="admin-toggle" onclick="toggleAdminPanel()">🔧 Admin Panel</button>
+
+    <!-- Kotak Input Tambah Postingan (Admin) -->
+    <div class="admin-panel" id="adminPanel">
+        <h2>Tambah Produk Baru</h2>
+        <div class="form-group">
+            <label>Nama Barang</label>
+            <input type="text" id="prodName" placeholder="Contoh: No 501 .one set">
+        </div>
+        <div class="form-group">
+            <label>Harga (Rp)</label>
+            <input type="text" id="prodPrice" placeholder="Contoh: 150.000">
+        </div>
+        <div class="form-group">
+            <label>Kategori</label>
+            <select id="prodCategory">
+                <option value="sepatu">Sepatu</option>
+                <option value="kaos">Kaos</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Nama File Gambar (Harus diupload di GitHub)</label>
+            <input type="text" id="prodImg" placeholder="Contoh: baju1.jpg">
+        </div>
+        <div class="admin-actions">
+            <button class="btn-post" onclick="addNewProduct()">Simpan & Post</button>
+            <button class="btn-close" onclick="toggleAdminPanel()">Batal</button>
+        </div>
+    </div>
+
+    <script>
+        // DATA DEFAULT (Supaya saat web pertama kali dibuka, client langsung melihat contoh produk)
+        const defaultProducts = [
+            { name: "No 501 .one set - streetgun", price: "249.000", category: "kaos", img: "baju.jpg" },
+            { name: "No 502 .GOODBROKS - BAGGY TRACKPANTS", price: "189.000", category: "sepatu", img: "celana.jpg" }
+        ];
+
+        // Memuat data dari LocalStorage browser jika admin pernah menambahkan barang baru
+        let products = JSON.parse(localStorage.getItem('lovr_products')) || defaultProducts;
+
+        function displayProducts(filter = 'semua') {
+            const container = document.getElementById('productContainer');
+            container.innerHTML = '';
+
+            products.forEach(item => {
+                if (filter === 'semua' || item.category === filter) {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <img src="${item.img}" alt="${item.name}" class="product-img">
+                        <div class="product-info">
+                            <div class="product-title">${item.name}</div>
+                            <div class="product-price">Rp ${item.price}</div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function filterCategory(category) {
+            const buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            displayProducts(category);
+        }
+
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function addNewProduct() {
+            const name = document.getElementById('prodName').value;
+            const price = document.getElementById('prodPrice').value;
+            const category = document.getElementById('prodCategory').value;
+            const img = document.getElementById('prodImg').value;
+
+            if(!name || !price || !img) {
+                alert("Tolong isi semua kolom admin!");
+                return;
+            }
+
+            products.push({ name, price, category, img });
+            localStorage.setItem('lovr_products', JSON.stringify(products));
+
+            // Reset Form, Tutup, dan Refresh halaman
+            document.getElementById('prodName').value = '';
+            document.getElementById('prodPrice').value = '';
+            document.getElementById('prodImg').value = '';
+            
+            toggleAdminPanel();
+            displayProducts();
+            alert("Barang baru sukses di-post!");
+        }
+
+        // Tampilkan produk pertama kali
+        displayProducts();
+    </script>
+</body>
+</html>
